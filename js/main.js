@@ -41,18 +41,13 @@
 
   /* ── Active nav link ────────────────────────────────────── */
   function setActiveNavLinks() {
-    const currentPath = window.location.pathname.split('/').pop() || 'index.html';
+    const raw = window.location.pathname.split('/').pop() || '';
+    // Normalize: strip .html extension so /about and /about.html both match
+    const currentPath = raw.replace(/\.html$/, '') || 'index';
     document.querySelectorAll('.nav-links a, .nav-mobile a').forEach(link => {
       const linkPath = link.getAttribute('href') || '';
-      const linkFile = linkPath.split('/').pop();
-      const isHome   = (currentPath === '' || currentPath === 'index.html');
-      const linkIsHome = (linkFile === '' || linkFile === 'index.html');
-
-      if (isHome && linkIsHome) {
-        link.classList.add('active');
-      } else if (!isHome && linkFile === currentPath) {
-        link.classList.add('active');
-      }
+      const linkFile = linkPath.split('/').pop().replace(/\.html$/, '') || 'index';
+      if (linkFile === currentPath) link.classList.add('active');
     });
   }
 
