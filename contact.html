@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visit Us — Chase Park Church of Christ</title>
+  <meta name="description" content="Find Chase Park Church of Christ in Huntsville, Alabama. Get directions, service times, and contact information." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a href="index.html" class="nav-logo" aria-label="Chase Park Church of Christ — Home">
+        <span class="name">Chase Park</span>
+        <span class="sub">Church of Christ</span>
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="sermons.html">Sermons</a></li>
+        <li><a href="contact.html" class="nav-cta">Visit Us</a></li>
+      </ul>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="sermons.html">Sermons</a>
+    <a href="contact.html">Visit Us</a>
+  </nav>
+
+  <main>
+
+    <!-- ── Page Hero ──────────────────────────────────────── -->
+    <section class="page-hero" aria-labelledby="page-heading">
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="section-label">Find Us</span>
+          <h1 id="page-heading">Visit Chase Park</h1>
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span aria-hidden="true">›</span>
+            <span aria-current="page">Visit Us</span>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Service Times ──────────────────────────────────── -->
+    <div class="service-bar" aria-label="Service times">
+      <div class="container">
+        <div class="service-bar-inner">
+          <span class="service-bar-label">We Meet</span>
+          <div class="service-times">
+            <div class="service-time-item">
+              <span class="st-day">Sunday</span>
+              <span class="st-times">
+                9:00 AM Worship<br>
+                10:15 AM Bible Classes<br>
+                5:00 PM Worship
+              </span>
+            </div>
+            <div class="service-time-item">
+              <span class="st-day">Wednesday</span>
+              <span class="st-times">
+                6:30 PM Bible Study<br>
+                Adult &amp; Youth
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Map + Info ─────────────────────────────────────── -->
+    <section class="section" aria-labelledby="location-heading">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">Location</span>
+          <h2 id="location-heading">How to Find Us</h2>
+          <p>We're located on Winchester Road in northeast Huntsville. Plenty of parking is available on-site.</p>
+        </div>
+
+        <div class="contact-map reveal" aria-label="Map to Chase Park Church of Christ">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3268.3!2d-86.5232!3d34.7704!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88626e5b10b7e1ab%3A0x8c6e0f3d19a2b4c0!2s1640+Winchester+Rd+NE%2C+Huntsville%2C+AL+35811!5e0!3m2!1sen!2sus!4v1680000000000"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Map to Chase Park Church of Christ"
+            style="min-height:420px;">
+          </iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Contact Form + Details ─────────────────────────── -->
+    <section class="section section--alt" aria-labelledby="contact-heading">
+      <div class="container">
+        <div class="contact-grid">
+
+          <!-- Contact Form -->
+          <div class="reveal">
+            <span class="section-label">Send a Message</span>
+            <h2 id="contact-heading" style="margin-bottom:24px;">Get in Touch</h2>
+            <p style="color:var(--muted); margin-bottom:32px;">Have a question or need to speak with someone? Fill out the form below and we'll get back to you.</p>
+
+            <form id="contact-form" class="contact-form" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="first-name">First Name</label>
+                  <input type="text" id="first-name" name="first-name" placeholder="John" autocomplete="given-name" required />
+                </div>
+                <div class="form-group">
+                  <label for="last-name">Last Name</label>
+                  <input type="text" id="last-name" name="last-name" placeholder="Smith" autocomplete="family-name" required />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required />
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone (optional)</label>
+                <input type="tel" id="phone" name="phone" placeholder="(256) 555-0100" autocomplete="tel" />
+              </div>
+
+              <div class="form-group">
+                <label for="subject">Subject</label>
+                <select id="subject" name="subject" required>
+                  <option value="" disabled selected>Select a topic…</option>
+                  <option>I'm planning a visit</option>
+                  <option>Bible study request</option>
+                  <option>Prayer request</option>
+                  <option>Questions about the church</option>
+                  <option>Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" placeholder="How can we help you?" required></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send Message</button>
+            </form>
+          </div>
+
+          <!-- Contact Details -->
+          <div class="contact-details reveal">
+            <span class="section-label">Direct Contact</span>
+            <h2 style="margin-bottom:24px;">Church Office</h2>
+
+            <div class="info-block">
+              <p class="info-block-label">Address</p>
+              <p>
+                1640 Winchester Rd. N.E.<br>
+                Huntsville, AL 35811
+              </p>
+            </div>
+
+            <div class="info-block">
+              <p class="info-block-label">Phone</p>
+              <p><a href="tel:+12568523801">(256) 852-3801</a></p>
+            </div>
+
+            <div class="info-block">
+              <p class="info-block-label">Office Hours</p>
+              <p>Monday – Friday<br>8:00 AM – 3:00 PM</p>
+            </div>
+
+            <div class="info-block">
+              <p class="info-block-label">Sunday Services</p>
+              <p>
+                9:00 AM — Morning Worship<br>
+                10:15 AM — Bible Classes<br>
+                5:00 PM — Evening Worship
+              </p>
+            </div>
+
+            <div class="info-block">
+              <p class="info-block-label">Wednesday</p>
+              <p>6:30 PM — Bible Study<br>(Adult &amp; Youth)</p>
+            </div>
+
+            <!-- What to expect box -->
+            <div style="background:var(--white); border-radius:var(--radius-lg); padding:24px; box-shadow:var(--shadow); margin-top:8px; border-left:4px solid var(--accent);">
+              <h4 style="margin-bottom:10px; font-family:var(--font-head);">What to Expect</h4>
+              <p style="font-size:0.9rem; color:var(--muted); margin:0; line-height:1.7;">
+                Dress is casual or formal — wear what's comfortable. Our services include Scripture reading, a cappella singing, prayer, communion, and a message from God's Word. Plan to stay about an hour.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Scripture Quote -->
+    <section class="scripture-section" aria-label="Scripture">
+      <div class="container">
+        <blockquote>
+          <p class="scripture-text">"Come to me, all who labor and are heavy laden, and I will give you rest."</p>
+          <footer class="scripture-ref">Matthew 11:28</footer>
+        </blockquote>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="name">Chase Park</p>
+          <p class="sub">Church of Christ</p>
+          <p>A community of faith in Huntsville, Alabama — rooted in Scripture and committed to love.</p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="sermons.html">Sermons</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Service Times</h4>
+          <ul>
+            <li><a href="#">Sunday 9:00 AM</a></li>
+            <li><a href="#">Sunday 10:15 AM</a></li>
+            <li><a href="#">Sunday 5:00 PM</a></li>
+            <li><a href="#">Wednesday 6:30 PM</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <address>
+            1640 Winchester Rd. N.E.<br>
+            Huntsville, AL 35811<br><br>
+            <a href="tel:+12568523801">(256) 852-3801</a><br>
+            Mon–Fri, 8 AM–3 PM
+          </address>
+        </div>
+      </div>
+
+      <p class="footer-bottom">
+        &copy; <span id="year"></span> Chase Park Church of Christ. All rights reserved.
+      </p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script src="js/main.js"></script>
+</body>
+</html>
