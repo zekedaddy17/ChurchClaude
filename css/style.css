@@ -1251,3 +1251,191 @@ p:last-child { margin-bottom: 0; }
 .mt-24 { margin-top: 24px; }
 .mt-32 { margin-top: 32px; }
 .mb-0  { margin-bottom: 0; }
+
+/* ============================================================
+   Mobile & Tablet Polish
+   Targeted overrides for small/medium viewports
+   ============================================================ */
+
+/* ── Global spacing tightening on phones ─────────────────── */
+@media (max-width: 767px) {
+  :root {
+    --section-pad: 56px;
+  }
+
+  .section-header {
+    margin-bottom: 36px;
+  }
+
+  .scripture-section {
+    padding-block: 48px;
+  }
+
+  .page-hero {
+    padding-block: 44px 36px;
+  }
+}
+
+/* ── Hero: reduce vertical padding on mobile ─────────────── */
+@media (max-width: 767px) {
+  .hero {
+    min-height: calc(85vh - var(--nav-h));
+    align-items: flex-end;
+  }
+
+  .hero-content {
+    padding-block: 40px 56px;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Service bar: full-width button on mobile ────────────── */
+@media (max-width: 767px) {
+  .service-bar {
+    padding-block: 20px 24px;
+  }
+
+  .service-bar-inner > .btn {
+    width: 100%;
+    justify-content: center;
+    margin-top: 4px;
+  }
+
+  .service-times {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .service-time-item {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    padding: 0 0 16px 0;
+    margin-right: 0;
+  }
+
+  .service-time-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+/* ── Sermon row: date + title side-by-side on mobile ─────── */
+@media (max-width: 767px) {
+  .sermon-row {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    align-items: start;
+    padding: 20px;
+  }
+
+  .sermon-row-date {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  .sermon-row-info {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .sermon-row-actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+}
+
+/* ── Livestream banner: tighter padding on mobile ────────── */
+@media (max-width: 767px) {
+  .livestream-banner {
+    padding: 24px;
+  }
+
+  .livestream-banner .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ── Contact form: stack first/last name on small phones ─── */
+@media (max-width: 560px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Welcome grid: tighten gap on mobile ─────────────────── */
+@media (max-width: 899px) {
+  .welcome-grid {
+    gap: 32px;
+  }
+}
+
+/* ── Footer: tighten on small phones ────────────────────── */
+@media (max-width: 599px) {
+  .site-footer {
+    padding-block: 40px 24px;
+  }
+
+  .footer-grid {
+    gap: 28px;
+    margin-bottom: 32px;
+  }
+
+  .footer-brand p {
+    max-width: 100%;
+  }
+}
+
+/* ── Tap target sizing (touch accessibility) ─────────────── */
+@media (max-width: 767px) {
+  .nav-toggle {
+    width: 44px;
+    height: 44px;
+  }
+
+  .icon-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .filter-btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+}
+
+/* ── Tablet (768–1023px) tweaks ──────────────────────────── */
+@media (min-width: 768px) and (max-width: 1023px) {
+  :root {
+    --section-pad: 72px;
+  }
+
+  .hero-content {
+    padding-block: 64px;
+    max-width: 600px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+}
