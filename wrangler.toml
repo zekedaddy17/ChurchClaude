@@ -1,0 +1,6 @@
+name = "cpcofc"
+compatibility_date = "2025-04-14"
+workers_dev = true
+
+[assets]
+directory = "."
