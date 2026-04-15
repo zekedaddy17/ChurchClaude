@@ -28,6 +28,7 @@
   --nav-h:       72px;
   --section-pad: 96px;
   --content-w:   1160px;
+  --danger:      #c0392b;
 }
 
 /* ── Reset ────────────────────────────────────────────────── */
@@ -1251,6 +1252,247 @@ p:last-child { margin-bottom: 0; }
 .mt-24 { margin-top: 24px; }
 .mt-32 { margin-top: 32px; }
 .mb-0  { margin-bottom: 0; }
+
+/* ============================================================
+   Auth Pages (login / register)
+   ============================================================ */
+
+.auth-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 480px;
+  margin-inline: auto;
+}
+
+.auth-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 40px 40px 36px;
+  width: 100%;
+}
+
+.auth-card h2 {
+  margin-bottom: 6px;
+  font-size: 1.7rem;
+}
+
+.auth-subtitle {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-submit {
+  width: 100%;
+  justify-content: center;
+  padding: 14px;
+  font-size: 1rem;
+  margin-top: 4px;
+}
+
+.auth-alt {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0;
+}
+
+.auth-alt a {
+  color: var(--primary);
+  font-weight: 700;
+  transition: color 0.2s;
+}
+
+.auth-alt a:hover { color: var(--accent-dark); }
+
+/* Error / success banners */
+.auth-banner {
+  width: 100%;
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.auth-banner svg {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.auth-error {
+  background: #fdf2f2;
+  color: #c0392b;
+  border: 1px solid #f5c6c6;
+}
+
+.auth-success {
+  background: #f0faf4;
+  color: #1e7e45;
+  border: 1px solid #b7e4c7;
+}
+
+/* Password show/hide */
+.password-wrap {
+  position: relative;
+}
+
+.password-wrap input {
+  padding-right: 48px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: var(--muted);
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle:hover { color: var(--primary); }
+
+.password-toggle svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.75;
+}
+
+/* Field hint text */
+.field-hint {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+@media (max-width: 520px) {
+  .auth-card {
+    padding: 28px 20px 24px;
+  }
+}
+
+/* ============================================================
+   Members Portal Page
+   ============================================================ */
+
+.portal-hero-content p.portal-hero-sub {
+  color: rgba(255,255,255,0.75);
+  font-size: 1rem;
+  margin-top: 8px;
+  margin-bottom: 0;
+}
+
+.portal-hero-actions {
+  margin-top: 20px;
+}
+
+.portal-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 600px) {
+  .portal-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (min-width: 900px) {
+  .portal-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.portal-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--accent);
+  transition: box-shadow 0.2s, transform 0.2s;
+  display: flex;
+  flex-direction: column;
+}
+
+.portal-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.portal-card-icon {
+  width: 48px;
+  height: 48px;
+  background: var(--bg-alt);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.portal-card-icon svg {
+  width: 22px;
+  height: 22px;
+  stroke: var(--primary);
+  fill: none;
+  stroke-width: 1.75;
+}
+
+.portal-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 8px;
+}
+
+.portal-card p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  flex: 1;
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.portal-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+  transition: color 0.2s;
+  margin-top: auto;
+}
+
+.portal-card-link:hover { color: var(--accent-dark); }
+
+.portal-card-link svg {
+  width: 14px;
+  height: 14px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
 
 /* ============================================================
    Mobile & Tablet Polish

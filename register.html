@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Account — Chase Park Church of Christ</title>
+  <meta name="description" content="Register for the Chase Park Church of Christ member portal." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a href="index.html" class="nav-logo" aria-label="Chase Park Church of Christ — Home">
+        <span class="name">Chase Park</span>
+        <span class="sub">Church of Christ</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="sermons.html">Sermons</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="nav-cta">Visit Us</a></li>
+      </ul>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="sermons.html">Sermons</a>
+    <a href="members.html">Members</a>
+    <a href="contact.html">Visit Us</a>
+  </nav>
+
+  <main>
+    <section class="page-hero" aria-labelledby="page-heading">
+      <div class="container">
+        <div class="page-hero-content">
+          <span class="section-label">Member Area</span>
+          <h1 id="page-heading">Create an Account</h1>
+          <nav class="breadcrumb" aria-label="Breadcrumb">
+            <a href="index.html">Home</a>
+            <span aria-hidden="true">›</span>
+            <a href="login.html">Members</a>
+            <span aria-hidden="true">›</span>
+            <span aria-current="page">Register</span>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="auth-wrap">
+          <div class="auth-card">
+            <h2>Join the Portal</h2>
+            <p class="auth-subtitle">Create an account to access members-only resources.</p>
+
+            <div id="error-banner" class="auth-banner auth-error" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              <span id="error-text">Something went wrong.</span>
+            </div>
+
+            <form id="register-form" class="auth-form" novalidate>
+              <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Smith"
+                  autocomplete="name" required />
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com"
+                  autocomplete="email" required />
+              </div>
+
+              <div class="form-group">
+                <label for="password">Password</label>
+                <div class="password-wrap">
+                  <input type="password" id="password" name="password" placeholder="Min. 8 characters"
+                    autocomplete="new-password" required minlength="8" />
+                  <button type="button" class="password-toggle" aria-label="Show password">
+                    <svg class="eye-open" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                  </button>
+                </div>
+                <span class="field-hint">At least 8 characters</span>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm">Confirm Password</label>
+                <input type="password" id="confirm" name="confirm" placeholder="Repeat password"
+                  autocomplete="new-password" required />
+                <span class="field-hint" id="confirm-hint" style="display:none; color:var(--danger);">
+                  Passwords do not match.
+                </span>
+              </div>
+
+              <button type="submit" class="btn btn-primary auth-submit" id="submit-btn">
+                Create Account
+              </button>
+            </form>
+
+            <p class="auth-alt">
+              Already have an account? <a href="login.html">Sign in here</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="name">Chase Park</p>
+          <p class="sub">Church of Christ</p>
+          <p>A community of faith in Huntsville, Alabama — rooted in Scripture and committed to love.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="sermons.html">Sermons</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Service Times</h4>
+          <ul>
+            <li><a href="contact.html">Sunday 9:00 AM</a></li>
+            <li><a href="contact.html">Sunday 10:15 AM</a></li>
+            <li><a href="contact.html">Sunday 5:00 PM</a></li>
+            <li><a href="contact.html">Wednesday 6:30 PM</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <address>
+            1640 Winchester Rd. N.E.<br>
+            Huntsville, AL 35811<br><br>
+            <a href="tel:+12568523801">(256) 852-3801</a><br>
+            Mon–Fri, 8 AM–3 PM
+          </address>
+        </div>
+      </div>
+      <p class="footer-bottom">&copy; <span id="year"></span> Chase Park Church of Christ. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script src="js/main.js"></script>
+  <script>
+    // Password visibility toggle
+    document.querySelector('.password-toggle').addEventListener('click', function () {
+      const input = document.getElementById('password');
+      const isText = input.type === 'text';
+      input.type = isText ? 'password' : 'text';
+      this.querySelector('.eye-open').style.display   = isText ? '' : 'none';
+      this.querySelector('.eye-closed').style.display = isText ? 'none' : '';
+      this.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+    });
+
+    // Live confirm-password match check
+    document.getElementById('confirm').addEventListener('input', function () {
+      const hint = document.getElementById('confirm-hint');
+      hint.style.display = (this.value && this.value !== document.getElementById('password').value)
+        ? '' : 'none';
+    });
+
+    // Register form submission
+    document.getElementById('register-form').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn     = document.getElementById('submit-btn');
+      const error   = document.getElementById('error-banner');
+      const errTxt  = document.getElementById('error-text');
+      const pw      = document.getElementById('password').value;
+      const confirm = document.getElementById('confirm').value;
+
+      if (pw !== confirm) {
+        errTxt.textContent = 'Passwords do not match.';
+        error.hidden       = false;
+        return;
+      }
+
+      btn.disabled    = true;
+      btn.textContent = 'Creating account…';
+      error.hidden    = true;
+
+      try {
+        const res  = await fetch('/api/register', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify({
+            name:     document.getElementById('name').value,
+            email:    document.getElementById('email').value,
+            password: pw,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          window.location.href = '/login?registered=1';
+        } else {
+          errTxt.textContent = data.error || 'Registration failed.';
+          error.hidden       = false;
+          btn.disabled       = false;
+          btn.textContent    = 'Create Account';
+        }
+      } catch {
+        errTxt.textContent = 'Something went wrong. Please try again.';
+        error.hidden       = false;
+        btn.disabled       = false;
+        btn.textContent    = 'Create Account';
+      }
+    });
+  </script>
+</body>
+</html>

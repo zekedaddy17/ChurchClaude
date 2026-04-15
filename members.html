@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Members Portal — Chase Park Church of Christ</title>
+  <meta name="description" content="Members-only portal for Chase Park Church of Christ." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="site-header">
+    <nav class="nav-inner" aria-label="Main navigation">
+      <a href="index.html" class="nav-logo" aria-label="Chase Park Church of Christ — Home">
+        <span class="name">Chase Park</span>
+        <span class="sub">Church of Christ</span>
+      </a>
+      <ul class="nav-links" role="list">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="sermons.html">Sermons</a></li>
+        <li><a href="members.html">Members</a></li>
+        <li><a href="contact.html" class="nav-cta">Visit Us</a></li>
+      </ul>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="nav-mobile">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <nav class="nav-mobile" id="nav-mobile" aria-label="Mobile navigation">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="sermons.html">Sermons</a>
+    <a href="members.html">Members</a>
+    <a href="contact.html">Visit Us</a>
+  </nav>
+
+  <main>
+
+    <!-- ── Portal Hero ────────────────────────────────────── -->
+    <section class="page-hero" aria-labelledby="page-heading">
+      <div class="container">
+        <div class="page-hero-content portal-hero-content">
+          <span class="section-label">Members Only</span>
+          <h1 id="page-heading">Welcome, {{MEMBER_NAME}}</h1>
+          <p class="portal-hero-sub">You're signed in to the Chase Park members portal.</p>
+          <div class="portal-hero-actions">
+            <a href="/api/logout" class="btn btn-outline">Sign Out</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Portal Content ─────────────────────────────────── -->
+    <section class="section">
+      <div class="container">
+
+        <div class="section-header reveal">
+          <span class="section-label">Resources</span>
+          <h2>Member Resources</h2>
+          <p>Everything you need to stay connected and informed as part of our church family.</p>
+        </div>
+
+        <div class="portal-grid">
+
+          <div class="portal-card reveal">
+            <div class="portal-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            </div>
+            <h3>Weekly Bulletin</h3>
+            <p>The current week's bulletin with announcements, schedule updates, and congregational news.</p>
+            <a href="#" class="portal-card-link">
+              View Bulletin
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="portal-card reveal">
+            <div class="portal-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.4 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.82a16 16 0 0 0 6.29 6.29l.95-.95a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <h3>Newsline</h3>
+            <p>Member announcements, prayer requests, celebrations, and important congregational updates.</p>
+            <a href="#" class="portal-card-link">
+              Read Newsline
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="portal-card reveal">
+            <div class="portal-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <h3>Church Calendar</h3>
+            <p>Full schedule of upcoming services, classes, events, fellowships, and ministry activities.</p>
+            <a href="#" class="portal-card-link">
+              View Calendar
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="portal-card reveal">
+            <div class="portal-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </div>
+            <h3>Prayer List</h3>
+            <p>Current prayer requests from congregation members. Pray for one another and submit your own requests.</p>
+            <a href="#" class="portal-card-link">
+              View Requests
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="portal-card reveal">
+            <div class="portal-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <h3>Member Directory</h3>
+            <p>Contact information for members who have opted in. Stay connected with your church family.</p>
+            <a href="#" class="portal-card-link">
+              View Directory
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+          <div class="portal-card reveal">
+            <div class="portal-card-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            </div>
+            <h3>Bible Study Materials</h3>
+            <p>Class notes, study guides, and handouts from Sunday and Wednesday Bible classes.</p>
+            <a href="#" class="portal-card-link">
+              View Materials
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Scripture Quote -->
+    <section class="scripture-section" aria-label="Scripture">
+      <div class="container">
+        <blockquote>
+          <p class="scripture-text">"Therefore encourage one another and build one another up, just as you are doing."</p>
+          <footer class="scripture-ref">1 Thessalonians 5:11</footer>
+        </blockquote>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="name">Chase Park</p>
+          <p class="sub">Church of Christ</p>
+          <p>A community of faith in Huntsville, Alabama — rooted in Scripture and committed to love.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="sermons.html">Sermons</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Service Times</h4>
+          <ul>
+            <li><a href="contact.html">Sunday 9:00 AM</a></li>
+            <li><a href="contact.html">Sunday 10:15 AM</a></li>
+            <li><a href="contact.html">Sunday 5:00 PM</a></li>
+            <li><a href="contact.html">Wednesday 6:30 PM</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <address>
+            1640 Winchester Rd. N.E.<br>
+            Huntsville, AL 35811<br><br>
+            <a href="tel:+12568523801">(256) 852-3801</a><br>
+            Mon–Fri, 8 AM–3 PM
+          </address>
+        </div>
+      </div>
+      <p class="footer-bottom">&copy; <span id="year"></span> Chase Park Church of Christ. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script src="js/main.js"></script>
+</body>
+</html>

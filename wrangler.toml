@@ -1,6 +1,13 @@
 name = "cpcofc"
+main = "worker.js"
 compatibility_date = "2025-04-14"
 workers_dev = true
 
 [assets]
 directory = "."
+binding = "ASSETS"
+run_worker_first = true
+
+[[kv_namespaces]]
+binding = "MEMBERS_KV"
+id = "89ef8b41fc4f488bbc59668a617b8c05"
