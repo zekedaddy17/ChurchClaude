@@ -4,3 +4,4 @@
 wrangler.toml
 worker.js
 node_modules
+*.bak
