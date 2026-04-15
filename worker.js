@@ -350,6 +350,13 @@ export default {
       });
     }
 
+    // Redirect already-authenticated users away from login/register
+    if (path === '/login'    || path === '/login.html' ||
+        path === '/register' || path === '/register.html') {
+      const session = await getSession(request, env);
+      if (session) return redirectTo('/members');
+    }
+
     // Everything else: static assets
     return env.ASSETS.fetch(request);
   },
