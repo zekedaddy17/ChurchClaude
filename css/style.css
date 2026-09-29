@@ -1682,3 +1682,159 @@ p:last-child { margin-bottom: 0; }
     gap: 32px;
   }
 }
+
+/* ── Member Directory & Admin ─────────────────────────────── */
+.portal-card-soon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-top: 16px;
+}
+
+.directory-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.directory-search { flex: 1 1 280px; margin-bottom: 0; }
+
+.directory-count,
+.directory-updated {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.directory-updated { margin-top: 32px; text-align: center; }
+
+.directory-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 0;
+  margin: 0;
+}
+
+.directory-card { border-top-color: var(--primary); }
+
+.directory-card-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.directory-card-head h3 { margin: 0; font-size: 1.05rem; }
+
+/* Reuses .leader-avatar's circle, swapping the SVG for initials. */
+.directory-avatar {
+  width: 46px;
+  height: 46px;
+  font-family: var(--font-head);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.02em;
+}
+
+.directory-fields { margin: 0; font-size: 0.88rem; }
+
+.directory-fields dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-dark);
+  margin-top: 10px;
+}
+
+.directory-fields dd {
+  margin: 2px 0 0;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+.directory-fields dd a { color: var(--primary); }
+
+/* Admin */
+.admin-list { display: flex; flex-direction: column; gap: 12px; }
+
+.admin-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+}
+
+.admin-row strong { display: block; }
+
+.admin-row-email,
+.admin-row-date {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.admin-row-actions { display: flex; gap: 10px; }
+.admin-row-actions .btn { padding: 8px 18px; font-size: 0.82rem; }
+
+.admin-meta,
+.admin-hint {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.admin-table-wrap { overflow-x: auto; margin: 20px 0; }
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  background: var(--white);
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.admin-table th {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.admin-table td:nth-child(n+3),
+.admin-table th:nth-child(n+3) { text-align: center; width: 72px; }
+
+.admin-sample {
+  color: var(--muted);
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}

@@ -62,7 +62,7 @@
         <div class="auth-wrap">
           <div class="auth-card">
             <h2>Join the Portal</h2>
-            <p class="auth-subtitle">Create an account to access members-only resources.</p>
+            <p class="auth-subtitle">Request an account to access members-only resources. The church office reviews each request before access is granted.</p>
 
             <div id="error-banner" class="auth-banner auth-error" hidden>
               <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
@@ -105,7 +105,7 @@
               </div>
 
               <button type="submit" class="btn btn-primary auth-submit" id="submit-btn">
-                Create Account
+                Request Account
               </button>
             </form>
 
@@ -195,7 +195,7 @@
       }
 
       btn.disabled    = true;
-      btn.textContent = 'Creating account…';
+      btn.textContent = 'Submitting…';
       error.hidden    = true;
 
       try {
@@ -214,16 +214,16 @@
         if (res.ok) {
           window.location.href = '/login?registered=1';
         } else {
-          errTxt.textContent = data.error || 'Registration failed.';
+          errTxt.textContent = data.error || 'Request failed.';
           error.hidden       = false;
           btn.disabled       = false;
-          btn.textContent    = 'Create Account';
+          btn.textContent    = 'Request Account';
         }
       } catch {
         errTxt.textContent = 'Something went wrong. Please try again.';
         error.hidden       = false;
         btn.disabled       = false;
-        btn.textContent    = 'Create Account';
+        btn.textContent    = 'Request Account';
       }
     });
   </script>

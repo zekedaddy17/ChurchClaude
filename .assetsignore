@@ -5,3 +5,13 @@ wrangler.toml
 worker.js
 node_modules
 *.bak
+
+# Never serve member data exports. The repo root IS the public asset store
+# (wrangler.toml: [assets] directory = "."), so an export saved here would
+# otherwise be downloadable by anyone who guesses the filename.
+*.csv
+*.xls
+*.xlsx
+*.tsv
+tests
+MEMBERS-PORTAL.md

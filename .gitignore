@@ -1,0 +1,9 @@
+node_modules/
+.wrangler/
+
+# Member data exports must never be committed. They are read in the browser and
+# uploaded straight to KV — they have no reason to touch this repo at all.
+*.csv
+*.xls
+*.xlsx
+*.tsv
