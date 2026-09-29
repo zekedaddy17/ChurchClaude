@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const suites = ['worker.test.mjs', 'csv.test.mjs', 'pages.test.mjs'];
+const suites = ['worker.test.mjs', 'csv.test.mjs', 'pages.test.mjs', 'seed.test.mjs'];
 let failed = 0;
 
 for (const s of suites) {

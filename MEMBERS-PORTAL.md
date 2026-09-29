@@ -73,6 +73,62 @@ Cloudflare. Only the ticked columns are uploaded. Field labels on the directory
 page are the CSV's own column headings, so if a heading reads oddly, rename it
 in the Servant Keeper export and re-upload.
 
+## Staging site
+
+There is a second, completely separate Worker for trying things out, configured
+under `[env.test]` in `wrangler.toml`. It has its **own KV namespace**, so
+uploading a throwaway directory or clicking Deny there cannot touch a real
+member's account.
+
+It lands at `https://cpcofc-test.<your-subdomain>.workers.dev`.
+
+### First-time setup
+
+```
+npx wrangler login
+npx wrangler kv namespace create MEMBERS_KV_TEST
+```
+
+Put the printed id into `[[env.test.kv_namespaces]]` in `wrangler.toml`,
+replacing `REPLACE_ME_WITH_TEST_NAMESPACE_ID`. Then:
+
+```
+npx wrangler secret put ADMIN_EMAILS --env test    # paste: office@example.com
+npx wrangler deploy --env test
+node scripts/seed-staging.mjs
+```
+
+The seed script fills staging with fake accounts and a fake directory:
+
+| Account | Role | Password |
+|---|---|---|
+| `office@example.com` | admin | `staging-password` |
+| `member@example.com` | approved member | `staging-password` |
+| `hopeful@example.com` | pending — try approving it | `staging-password` |
+| `newcomer@example.com` | pending | `staging-password` |
+
+`node scripts/seed-staging.mjs --print` shows the commands without running
+them. The script refuses to run if the staging namespace id is still a
+placeholder, or if staging and production somehow share a namespace id.
+
+### Redeploying staging
+
+```
+npx wrangler deploy --env test
+```
+
+**Mind the flag.** `npx wrangler deploy` with no `--env` deploys **production**.
+If you are iterating on staging and drop the flag, you push straight to the
+live church site. The GitHub Actions workflow also deploys production on every
+push to `main`; staging is deployed manually only.
+
+### Note on visibility
+
+Staging is publicly reachable and not marked `noindex`, so search engines may
+index it alongside the real site. The members area is still behind login
+either way. If it ever shows up in search results, add an `X-Robots-Tag:
+noindex` header for the staging environment.
+
 ## Tests
 
 ```
@@ -80,7 +136,7 @@ node tests/run.mjs
 ```
 
 No dependencies. Covers the approval and admin model, the `/members` route
-gating, the CSV parser, and a syntax check of every `<script>` the Worker
-inlines into a page — the last one matters because `node --check worker.js`
+gating, the CSV parser, the staging seed data, and a syntax check of every
+`<script>` the Worker inlines into a page — the last one matters because `node --check worker.js`
 cannot see inside a template literal, so a broken escape in inlined page JS
 would otherwise ship silently.
