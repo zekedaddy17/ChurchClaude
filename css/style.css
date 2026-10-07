@@ -489,7 +489,7 @@ p:last-child { margin-bottom: 0; }
 }
 
 /* ── Sermon Tiles (YouTube-style previews) ────────────────── */
-/* Shared by the home page (3 tiles) and /sermons (featured + 5).
+/* Shared by the home page (3 tiles) and /sermons (6 tiles).
    Every tile is a 16:9 thumbnail with its title over a soft gradient. */
 .sermons-grid {
   display: grid;
@@ -501,31 +501,8 @@ p:last-child { margin-bottom: 0; }
   .sermons-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
-/* Home (3 tiles) in two columns: the newest takes the full first row */
-@media (min-width: 600px) and (max-width: 899px) {
-  .sermons-grid:not(.sermons-grid--featured) > .sermon-tile:first-child:nth-last-child(odd) {
-    grid-column: 1 / -1;
-  }
-}
-
 @media (min-width: 900px) {
   .sermons-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
-}
-
-/* /sermons: newest video takes a 2×2 slot, the next two stack beside it */
-.sermons-grid--featured .sermon-tile--featured { grid-column: 1 / -1; }
-
-/* Two columns: the featured tile takes a full row, so an even count leaves the
-   last tile alone — let it span too. */
-@media (min-width: 600px) and (max-width: 899px) {
-  .sermons-grid--featured > .sermon-tile:last-child:nth-child(even) { grid-column: 1 / -1; }
-}
-
-@media (min-width: 900px) {
-  .sermons-grid--featured .sermon-tile--featured {
-    grid-column: span 2;
-    grid-row: span 2;
-  }
 }
 
 .sermon-tile {
@@ -537,11 +514,6 @@ p:last-child { margin-bottom: 0; }
   box-shadow: var(--shadow);
   isolation: isolate;
   transition: box-shadow 0.3s, transform 0.3s;
-}
-
-/* Featured tile: let the grid row heights decide, so it lines up with the pair beside it */
-@media (min-width: 900px) {
-  .sermons-grid--featured .sermon-tile--featured { aspect-ratio: auto; }
 }
 
 .sermon-tile:hover,
@@ -595,12 +567,6 @@ p:last-child { margin-bottom: 0; }
   -webkit-backdrop-filter: blur(8px);
 }
 
-.sermon-tile--featured .sermon-chip {
-  color: var(--primary-dark);
-  background: var(--accent);
-  border-color: transparent;
-}
-
 .sermon-tile-text {
   position: absolute;
   left: 0;
@@ -626,44 +592,6 @@ p:last-child { margin-bottom: 0; }
   font-size: 0.8rem;
   color: rgba(255, 255, 255, 0.78);
   letter-spacing: 0.02em;
-}
-
-.sermon-tile-desc { display: none; }
-
-@media (min-width: 600px) {
-  .sermon-tile--featured .sermon-tile-text { padding: 32px 36px; }
-  .sermon-tile--featured .sermon-tile-text h3 { font-size: clamp(1.5rem, 2.6vw, 2.25rem); margin-bottom: 8px; }
-  .sermon-tile--featured .sermon-tile-meta { font-size: 0.92rem; }
-  .sermon-tile--featured .sermon-tile-desc {
-    display: block;
-    max-width: 56ch;
-    margin-top: 6px;
-    font-size: 0.95rem;
-    color: rgba(255, 255, 255, 0.85);
-  }
-}
-
-.sermon-tile-eyebrow { display: none; }
-
-@media (min-width: 600px) {
-  .sermon-tile-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 10px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  .sermon-tile-eyebrow::before {
-    content: '';
-    width: 24px;
-    height: 2px;
-    background: var(--accent);
-  }
 }
 
 /* The play button covers the whole tile, so the entire preview is clickable;
@@ -712,15 +640,6 @@ p:last-child { margin-bottom: 0; }
   color: var(--primary-dark);
   background: var(--accent);
   box-shadow: 0 8px 28px rgba(200, 169, 110, 0.45);
-}
-
-@media (min-width: 600px) {
-  .sermon-tile--featured .sermon-tile-ring {
-    width: 84px;
-    height: 84px;
-    margin: -62px 0 0 -42px;
-  }
-  .sermon-tile--featured .sermon-tile-ring svg { width: 30px; height: 30px; }
 }
 
 /* Inline player replaces the preview in place */

@@ -74,8 +74,8 @@
 
   /* ── Sermons (from /api/sermons, the church YouTube feed) ── */
   // Home shows the 3 newest; /sermons shows the 6 newest that match the
-  // active filter, the first one featured large. The feed carries ~15, so a
-  // filter still has older videos to draw on.
+  // active filter. The feed carries ~15, so a filter still has older videos
+  // to draw on.
   const sermonsEl = document.querySelector('[data-sermons]');
   const CHANNEL_URL = 'https://www.youtube.com/@cpcofc/videos';
   const SHOW = { recent: 3, all: 6 };
@@ -122,23 +122,21 @@
     return img;
   }
 
-  function sermonTile(v, featured) {
+  function sermonTile(v) {
     const btn = el('button', { class: 'sermon-tile-play', type: 'button',
                                'aria-label': 'Play ' + v.title },
                    [el('span', { class: 'sermon-tile-ring', 'aria-hidden': 'true' }, [playIcon()])]);
 
     const tile = el('article', {
-      class: 'sermon-tile' + (featured ? ' sermon-tile--featured' : ''),
+      class: 'sermon-tile',
       'data-category': v.category,
     }, [
       thumbnail(v.videoId),
       el('span', { class: 'sermon-tile-shade', 'aria-hidden': 'true' }),
       el('span', { class: 'sermon-chip', text: v.category }),
       el('div', { class: 'sermon-tile-text' }, [
-        featured ? el('span', { class: 'sermon-tile-eyebrow', text: 'Latest message' }) : null,
         el('h3', { text: v.title }),
         el('p', { class: 'sermon-tile-meta', text: formatDate(v.date) }),
-        featured && v.description ? el('p', { class: 'sermon-tile-desc', text: v.description }) : null,
       ]),
       btn,
     ]);
@@ -180,7 +178,7 @@
       .filter(v => !category || category === 'All' || v.category === category)
       .slice(0, SHOW[mode] || 6);
 
-    sermonsEl.replaceChildren(...shown.map((v, i) => sermonTile(v, mode === 'all' && i === 0)));
+    sermonsEl.replaceChildren(...shown.map(v => sermonTile(v)));
     if (!shown.length) sermonsEl.appendChild(sermonsStatus('No recent videos in this category.'));
   }
 
