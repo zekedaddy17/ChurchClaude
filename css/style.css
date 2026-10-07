@@ -604,6 +604,31 @@ p:last-child { margin-bottom: 0; }
   margin-top: 48px;
 }
 
+/* Thumbnails come from YouTube; the gradient above stays as the fallback. */
+.sermon-card-thumb {
+  background-size: cover;
+  background-position: center;
+}
+
+/* Placeholder shown while /api/sermons loads */
+.skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--bg-alt);
+  margin-bottom: 10px;
+}
+.skeleton-line.short { width: 40%; }
+.skeleton-line.long  { width: 85%; height: 18px; }
+
+.sermons-status {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.93rem;
+  padding: 24px 0;
+}
+.sermons-status a { color: var(--primary); font-weight: 600; text-decoration: underline; }
+
 /* ── Ministries ───────────────────────────────────────────── */
 .ministry-grid {
   display: grid;
@@ -963,6 +988,20 @@ p:last-child { margin-bottom: 0; }
   transform: translateY(-1px);
 }
 
+.sermon-row.playing:hover { transform: none; }
+.sermon-row[hidden] { display: none; }
+
+.sermon-embed {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 100%;
+  max-width: 860px;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: var(--radius);
+  background: #000;
+}
+
 @media (min-width: 768px) {
   .sermon-row {
     grid-template-columns: auto 1fr auto;
@@ -1038,10 +1077,13 @@ p:last-child { margin-bottom: 0; }
   transition: all 0.2s;
 }
 
-.icon-btn:hover {
+.icon-btn:hover,
+.icon-btn[aria-expanded="true"] {
   background: var(--primary);
   border-color: var(--primary);
 }
+
+.icon-btn[aria-expanded="true"] svg { stroke: var(--white); }
 
 .icon-btn:hover svg { stroke: var(--white); }
 

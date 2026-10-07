@@ -3,7 +3,7 @@
  * Dependency-free test suite. Run with:  node tests/run.mjs
  *
  * Covers the auth/approval model, the /members route gating, the CSV parser and
- * column auto-guessing, and a syntax check of every <script> the Worker inlines
+ * column auto-guessing, the YouTube sermon feed, and a syntax check of every <script> the Worker inlines
  * into a page (which `node --check worker.js` cannot see, because those scripts
  * live inside template literals).
  */
@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const suites = ['worker.test.mjs', 'csv.test.mjs', 'pages.test.mjs', 'seed.test.mjs'];
+const suites = ['worker.test.mjs', 'csv.test.mjs', 'pages.test.mjs', 'seed.test.mjs', 'sermons.test.mjs'];
 let failed = 0;
 
 for (const s of suites) {

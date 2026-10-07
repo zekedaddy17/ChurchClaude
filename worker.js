@@ -11,6 +11,7 @@
  *   POST /api/admin/users/approve       — approve a pending account (admins only)
  *   POST /api/admin/users/deny          — deny + remove a pending account (admins only)
  *   POST /api/admin/directory/import    — replace the directory (admins only)
+ *   GET  /api/sermons                   — latest videos from the church YouTube channel
  *   GET  /members                       — auth-gated portal
  *   GET  /members/directory             — auth-gated member directory
  *   GET  /members/admin                 — admin-gated approvals + directory import
@@ -41,6 +42,14 @@ const PBKDF2_ITERS = 100_000;
 const MAX_DIRECTORY_ROWS  = 5000;
 const MAX_DIRECTORY_BYTES = 2 * 1024 * 1024;
 const MAX_PENDING_QUEUE   = 500;         // registration backstop against bot floods
+
+// Sermons come from the public YouTube feed for @cpcofc (latest 15 uploads, no
+// API key). The feed intermittently 404s/500s, so the last good copy is kept in
+// KV and served whenever a refresh fails.
+const YT_CHANNEL_ID    = 'UCRk-B6eJNGd8zC8wE8_sk7A';
+const YT_FEED_URL      = `https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`;
+const SERMON_CACHE_KEY = 'sermons:feed';
+const SERMON_CACHE_TTL = 30 * 60 * 1000;  // ms
 
 // ── Crypto helpers ─────────────────────────────────────────────────────────
 
@@ -1218,6 +1227,90 @@ async function handleAdminUserAction(request, env, action) {
   return jsonResp({ ok: true, status: 'denied' });
 }
 
+// ── Sermons (YouTube feed) ──────────────────────────────────────────────────
+
+function decodeXml(str) {
+  return str
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g,          (_, d) => String.fromCodePoint(parseInt(d, 10)))
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');
+}
+
+/** Bucket a video by its title; the buckets match the filter buttons on /sermons. */
+function sermonCategory(title) {
+  if (/sunday morning/i.test(title)) return 'Sunday Morning';
+  if (/sunday evening/i.test(title)) return 'Sunday Evening';
+  if (/wednesday/i.test(title))      return 'Wednesday';
+  if (/special/i.test(title))        return 'Special';
+  return 'Lessons';
+}
+
+const MONTHS = ['january','february','march','april','may','june','july',
+                'august','september','october','november','december'];
+// "October 4, 2026" / "September 20th, 2026" at the start of a title or description
+const LEADING_DATE = /^\s*([a-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})[\s,:–-]*/i;
+
+/** Service date as YYYY-MM-DD from a leading "Month D, YYYY", or null. */
+function leadingDate(text) {
+  const m = text.match(LEADING_DATE);
+  const month = m && MONTHS.indexOf(m[1].toLowerCase());
+  if (!m || month < 0) return null;
+  return `${m[3]}-${String(month + 1).padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+}
+
+/**
+ * Only <entry> blocks are read — the feed's first <title> is the channel name.
+ * Videos are uploaded after the service (a Sunday evening service lands on
+ * Monday), so the date comes from the title or description when either starts
+ * with one, and the upload time is only the fallback.
+ */
+function parseYouTubeFeed(xml) {
+  const tag = (block, name) => {
+    const m = block.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)</${name}>`));
+    return m ? decodeXml(m[1].trim()) : '';
+  };
+  return (xml.match(/<entry>[\s\S]*?<\/entry>/g) || [])
+    .map(entry => {
+      const rawTitle    = tag(entry, 'title');
+      const description = tag(entry, 'media:description');
+      const published   = tag(entry, 'published');
+      const isDated     = LEADING_DATE.test(rawTitle) && leadingDate(rawTitle);
+      return {
+        videoId:     tag(entry, 'yt:videoId'),
+        title:       (isDated && rawTitle.replace(LEADING_DATE, '').trim()) || rawTitle,
+        date:        leadingDate(rawTitle) || leadingDate(description) || published.slice(0, 10),
+        category:    sermonCategory(rawTitle),
+        description: description === rawTitle ? '' : description.slice(0, 200),
+      };
+    })
+    .filter(v => /^[\w-]{6,20}$/.test(v.videoId));
+}
+
+async function handleSermons(env) {
+  let cached = null;
+  try { cached = JSON.parse(await env.MEMBERS_KV.get(SERMON_CACHE_KEY)); } catch {}
+
+  const send = data => jsonResp({ videos: data.videos, fetchedAt: data.fetchedAt }, 200,
+                                { 'Cache-Control': 'public, max-age=300' });
+
+  if (cached && Date.now() - cached.fetchedAt < SERMON_CACHE_TTL) return send(cached);
+
+  try {
+    const res = await fetch(YT_FEED_URL);
+    if (!res.ok) throw new Error(`feed ${res.status}`);
+    const videos = parseYouTubeFeed(await res.text());
+    if (!videos.length) throw new Error('feed had no entries');
+    const fresh = { fetchedAt: Date.now(), videos };
+    await env.MEMBERS_KV.put(SERMON_CACHE_KEY, JSON.stringify(fresh));
+    return send(fresh);
+  } catch (err) {
+    if (cached) return send(cached);
+    return jsonResp({ error: 'Sermons are temporarily unavailable.' }, 502);
+  }
+}
+
 // ── Main fetch handler ──────────────────────────────────────────────────────
 
 /** Treat /x, /x/ and /x.html as the same route. */
@@ -1245,6 +1338,7 @@ export default {
       if (path === '/api/logout')                        return handleLogout(request, env);
       if (path === '/api/session')                       return handleSessionCheck(request, env);
       if (path === '/api/directory' && method === 'GET') return handleDirectory(request, env);
+      if (path === '/api/sermons'   && method === 'GET') return handleSermons(env);
 
       if (path === '/api/admin/users' && method === 'GET')
         return handleAdminUsers(request, env);
