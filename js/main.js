@@ -188,7 +188,7 @@
     const id = encodeURIComponent(v.videoId);
 
     player.querySelector('#player-title').textContent = v.title;
-    player.querySelector('.player-meta').textContent = v.category + ' · ' + formatDate(v.date);
+    player.querySelector('.player-meta').textContent = v.meta || (v.category + ' · ' + formatDate(v.date));
     player.querySelector('.player-yt').href = 'https://www.youtube.com/watch?v=' + id;
     player.querySelector('.player-frame').replaceChildren(el('iframe', {
       src: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`,
@@ -242,6 +242,62 @@
       if (sermonsEl && allVideos.length) renderSermons(btn.dataset.filter);
     });
   });
+
+  /* ── Live stream banner (from /api/live) ───────────────── */
+  // YouTube's /live link lands on a stale video when nothing is on, so the
+  // banner only offers "Watch Live" while the Worker says we're actually live.
+  const liveBanner = document.querySelector('[data-live-banner]');
+
+  if (liveBanner) {
+    const part = name => liveBanner.querySelector(`[data-live-${name}]`);
+    const liveBtn = part('btn');
+    const offline = {
+      label: part('label').textContent, title: part('title').textContent,
+      text: part('text').textContent, btn: liveBtn.textContent, href: liveBtn.href,
+    };
+    let liveVideo = null;
+
+    liveBtn.addEventListener('click', e => {
+      if (!liveVideo) return;              // offline: a plain link to past streams
+      e.preventDefault();
+      openPlayer(liveVideo, liveBtn);
+    });
+
+    const show = (state, label, title, text, btn, href) => {
+      liveBanner.classList.toggle('is-live', state === 'live');
+      liveBanner.classList.toggle('is-upcoming', state === 'upcoming');
+      part('label').textContent = label;
+      part('title').textContent = title;
+      part('text').textContent  = text;
+      liveBtn.textContent = btn;
+      liveBtn.href = href;
+    };
+
+    const checkLive = () => fetch('/api/live')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(d => {
+        const watch = d.videoId && 'https://www.youtube.com/watch?v=' + encodeURIComponent(d.videoId);
+        liveVideo = null;
+        if (d.status === 'live') {
+          liveVideo = { videoId: d.videoId, title: d.title || 'Live from Chase Park', meta: 'Live now' };
+          show('live', 'Live Now', d.title || "We're live", 'Join us now — watch right here or on YouTube.',
+               'Watch Live', watch);
+        } else if (d.status === 'upcoming') {
+          const at = new Date(d.startsAt).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+          show('upcoming', 'Starting Soon', d.title || 'Live stream starting soon',
+               `We go live at ${at}. Check back then, or open it on YouTube to get notified.`,
+               'Open on YouTube', watch);
+        } else {
+          show('offline', offline.label, offline.title, offline.text, offline.btn, offline.href);
+        }
+      })
+      .catch(() => {});                    // keep whatever the banner shows now
+
+    checkLive();
+    // Recheck every 2 minutes while the tab is open, so it flips to live on its own
+    setInterval(() => { if (!document.hidden) checkLive(); }, 2 * 60 * 1000);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) checkLive(); });
+  }
 
   /* ── Contact form ───────────────────────────────────────── */
   const contactForm = document.getElementById('contact-form');

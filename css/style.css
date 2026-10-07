@@ -1160,16 +1160,27 @@ html.player-open { overflow: hidden; }
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #4ade80;
+  color: var(--accent);
   margin-bottom: 8px;
 }
 
+/* Not live: a steady dot. Upcoming: it pulses. Live: red and pulsing. */
 .live-dot-circle {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: #4ade80;
-  animation: pulse-dot 2s infinite;
+  background: currentColor;
+}
+
+.livestream-banner.is-upcoming .live-dot-circle,
+.livestream-banner.is-live .live-dot-circle { animation: pulse-dot 2s infinite; }
+
+.livestream-banner.is-live .live-dot { color: #ff5a4f; }
+.livestream-banner.is-live .live-dot-circle { width: 10px; height: 10px; box-shadow: 0 0 0 4px rgba(255, 90, 79, 0.25); }
+.livestream-banner.is-live { box-shadow: 0 0 0 2px rgba(255, 90, 79, 0.55), var(--shadow-md); }
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot-circle { animation: none !important; }
 }
 
 @keyframes pulse-dot {

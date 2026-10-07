@@ -119,17 +119,17 @@
     <section class="section section--alt" aria-labelledby="sermons-heading">
       <div class="container">
         <!-- Live Stream Banner -->
-        <div class="livestream-banner reveal" aria-label="Live stream information">
+        <!-- js/main.js asks /api/live and switches this to "Live now" while we're streaming -->
+        <div class="livestream-banner reveal" data-live-banner aria-label="Live stream information" aria-live="polite">
           <div>
             <p class="live-dot">
               <span class="live-dot-circle" aria-hidden="true"></span>
-              Live Streaming Available
+              <span data-live-label>Live Every Sunday</span>
             </p>
-            <h3>Watch Online Every Sunday</h3>
-            <p>Join us live at 9:00 AM on Sunday mornings or catch the recording afterward.</p>
+            <h3 data-live-title>Watch Online Every Sunday</h3>
+            <p data-live-text>We stream Sunday mornings at 9:00 AM. When we're live, you can watch right here.</p>
           </div>
-          <!-- /live always points at the channel's current (or next scheduled) stream -->
-          <a href="https://www.youtube.com/@cpcofc/live" target="_blank" rel="noopener" class="btn btn-primary" style="flex-shrink:0;">Watch Live on YouTube</a>
+          <a data-live-btn href="https://www.youtube.com/@cpcofc/streams" target="_blank" rel="noopener" class="btn btn-primary" style="flex-shrink:0;">Past Live Streams</a>
         </div>
 
         <div class="section-header reveal">

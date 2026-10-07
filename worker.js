@@ -12,6 +12,7 @@
  *   POST /api/admin/users/deny          — deny + remove a pending account (admins only)
  *   POST /api/admin/directory/import    — replace the directory (admins only)
  *   GET  /api/sermons                   — latest videos from the church YouTube channel
+ *   GET  /api/live                      — whether the channel is streaming right now
  *   GET  /members                       — auth-gated portal
  *   GET  /members/directory             — auth-gated member directory
  *   GET  /members/admin                 — admin-gated approvals + directory import
@@ -50,6 +51,9 @@ const YT_CHANNEL_ID    = 'UCRk-B6eJNGd8zC8wE8_sk7A';
 const YT_FEED_URL      = `https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`;
 const SERMON_CACHE_KEY = 'sermons:feed';
 const SERMON_CACHE_TTL = 30 * 60 * 1000;  // ms
+const YT_LIVE_URL      = `https://www.youtube.com/channel/${YT_CHANNEL_ID}/live`;
+const LIVE_CACHE_TTL   = 60 * 1000;       // ms
+const UPCOMING_WINDOW  = 3 * 60 * 60;     // s — only call a scheduled stream "upcoming" this close to its start
 
 // ── Crypto helpers ─────────────────────────────────────────────────────────
 
@@ -1311,6 +1315,63 @@ async function handleSermons(env) {
   }
 }
 
+/**
+ * Read the channel's /live page. YouTube sends it to *some* video even when
+ * nothing is on — the current stream, the next scheduled one, or a stale
+ * scheduled stream that never ran (ours points at one from Dec 2024) — so the
+ * page's own flags decide: liveBroadcastDetails.isLiveNow for live, and
+ * isUpcoming plus a start time in the next few hours for upcoming.
+ */
+function parseLivePage(html, nowSec = Date.now() / 1000) {
+  const offline = { status: 'offline' };
+  const id = (html.match(/<link rel="canonical" href="https:\/\/www\.youtube\.com\/watch\?v=([\w-]{6,20})"/) || [])[1];
+  if (!id) return offline;
+
+  const details = (html.match(/"liveBroadcastDetails":(\{[^{}]*\})/) || [])[1];
+  let broadcast = {};
+  try { broadcast = JSON.parse(details); } catch {}
+
+  let title = '';
+  const t = html.match(/"videoDetails":\{"videoId":"[\w-]+","title":("(?:[^"\\]|\\.)*")/);
+  try { title = t ? JSON.parse(t[1]) : ''; } catch {}
+
+  if (broadcast.isLiveNow === true) return { status: 'live', videoId: id, title };
+
+  const start = Number((html.match(/"scheduledStartTime":"(\d+)"/) || [])[1]);
+  if (/"isUpcoming":true/.test(html) && start > nowSec && start - nowSec < UPCOMING_WINDOW)
+    return { status: 'upcoming', videoId: id, title, startsAt: new Date(start * 1000).toISOString() };
+
+  return offline;
+}
+
+// Kept per isolate rather than in KV: checking every minute would blow through
+// KV's daily write allowance, and a cold isolate refetching costs nothing.
+let liveCache = null;
+
+async function handleLive() {
+  const send = data => jsonResp(data, 200, { 'Cache-Control': 'public, max-age=60' });
+  if (liveCache && Date.now() - liveCache.at < LIVE_CACHE_TTL) return send(liveCache.data);
+
+  try {
+    const res = await fetch(YT_LIVE_URL, { headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130 Safari/537.36',
+      'Accept-Language': 'en-US,en;q=0.9',
+      'Cookie': 'SOCS=CAI',   // skip the EU cookie-consent interstitial
+    } });
+    if (!res.ok) throw new Error(`live page ${res.status}`);
+    const html = await res.text();
+    const data = parseLivePage(html);
+    // Shows up in `wrangler tail`; a page with no canonical video usually means a consent or bot-check page
+    if (!/rel="canonical" href="https:\/\/www\.youtube\.com\/watch/.test(html))
+      console.warn('live: YouTube page had no video', res.url, html.length);
+    liveCache = { at: Date.now(), data };
+    return send(data);
+  } catch (err) {
+    console.warn('live: check failed', String(err));
+    return send(liveCache ? liveCache.data : { status: 'offline' });
+  }
+}
+
 // ── Main fetch handler ──────────────────────────────────────────────────────
 
 /** Treat /x, /x/ and /x.html as the same route. */
@@ -1339,6 +1400,7 @@ export default {
       if (path === '/api/session')                       return handleSessionCheck(request, env);
       if (path === '/api/directory' && method === 'GET') return handleDirectory(request, env);
       if (path === '/api/sermons'   && method === 'GET') return handleSermons(env);
+      if (path === '/api/live'      && method === 'GET') return handleLive();
 
       if (path === '/api/admin/users' && method === 'GET')
         return handleAdminUsers(request, env);
