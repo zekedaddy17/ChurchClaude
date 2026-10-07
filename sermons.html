@@ -75,6 +75,12 @@
           <a href="https://www.youtube.com/@cpcofc/streams" target="_blank" rel="noopener" class="btn btn-primary" style="flex-shrink:0;">Watch on YouTube</a>
         </div>
 
+        <div class="section-header sermons-heading reveal">
+          <span class="section-label">Watch</span>
+          <h2 id="recent-heading">Recent Messages</h2>
+          <p>The latest services and lessons from Chase Park. Tap any video to play it right here.</p>
+        </div>
+
         <!-- Filter -->
         <div class="sermons-filter reveal" role="group" aria-label="Filter sermons">
           <button class="filter-btn active" data-filter="All" aria-pressed="true">All</button>
@@ -85,9 +91,15 @@
           <button class="filter-btn" data-filter="Special" aria-pressed="false">Special</button>
         </div>
 
-        <!-- Sermon list — filled from /api/sermons (the @cpcofc YouTube feed) by js/main.js -->
-        <div class="sermons-full-grid" data-sermons="all" aria-label="Recent sermons" aria-live="polite">
-          <p class="sermons-status">Loading recent sermons…</p>
+        <!-- Filled from /api/sermons (the @cpcofc YouTube feed) by js/main.js:
+             the 6 newest matching the filter, the first one featured -->
+        <div class="sermons-grid sermons-grid--featured" data-sermons="all" aria-labelledby="recent-heading" aria-live="polite">
+          <div class="sermon-tile sermon-tile--featured is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
           <noscript>
             <p class="sermons-status">Watch recent sermons on <a href="https://www.youtube.com/@cpcofc/videos">our YouTube channel</a>.</p>
           </noscript>

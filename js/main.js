@@ -73,11 +73,14 @@
   }
 
   /* ── Sermons (from /api/sermons, the church YouTube feed) ── */
+  // Home shows the 3 newest; /sermons shows the 6 newest that match the
+  // active filter, the first one featured large. The feed carries ~15, so a
+  // filter still has older videos to draw on.
   const sermonsEl = document.querySelector('[data-sermons]');
   const CHANNEL_URL = 'https://www.youtube.com/@cpcofc/videos';
+  const SHOW = { recent: 3, all: 6 };
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  const MONTHS_LONG = ['January','February','March','April','May','June','July',
-                       'August','September','October','November','December'];
+  let allVideos = [];
 
   /** Tiny DOM builder — all feed text goes in via textContent, never innerHTML. */
   function el(tag, attrs, children) {
@@ -90,94 +93,77 @@
     return node;
   }
 
-  function svg(markup, viewBox) {
+  function playIcon() {
     const wrap = document.createElement('span');
-    wrap.innerHTML = `<svg viewBox="${viewBox || '0 0 24 24'}" aria-hidden="true">${markup}</svg>`;
+    wrap.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="6,3 20,12 6,21"/></svg>';
     return wrap.firstChild;
   }
 
-  const PLAY   = '<polygon points="5,3 19,12 5,21"/>';
-  const VIDEO  = '<polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>';
-  const ARROW  = '<path d="M5 12h14M12 5l7 7-7 7"/>';
-
-  /** "2026-10-04" → { y, m, d } without timezone shifts. */
-  function parts(date) {
+  /** "2026-10-04" → "Oct 4, 2026" without timezone shifts. */
+  function formatDate(date) {
     const [y, m, d] = date.split('-').map(Number);
-    return { y, m: m - 1, d };
+    return `${MONTHS[m - 1]} ${d}, ${y}`;
   }
 
-  const watchUrl = v => 'https://www.youtube.com/watch?v=' + encodeURIComponent(v.videoId);
+  /**
+   * Sharpest thumbnail YouTube has: 1280px, then 640px, then 480px. A missing
+   * size is either a 404 or a 120×90 grey placeholder, so step down on both.
+   * The 4:3 sizes are letterboxed; object-fit: cover crops the bars off.
+   */
+  const THUMBS = ['maxresdefault.jpg', 'sddefault.jpg', 'hqdefault.jpg'];
 
-  function sermonCard(v) {
-    const { y, m, d } = parts(v.date);
-    const thumb = el('a', {
-      class: 'sermon-card-thumb', href: watchUrl(v), target: '_blank', rel: 'noopener',
-      'aria-label': 'Watch ' + v.title + ' on YouTube',
-    }, [el('div', { class: 'play-icon' }, [svg(PLAY)])]);
-    thumb.style.backgroundImage =
-      `url("https://i.ytimg.com/vi/${encodeURIComponent(v.videoId)}/hqdefault.jpg")`;
-
-    const link = el('a', { class: 'sermon-link', href: watchUrl(v), target: '_blank', rel: 'noopener' });
-    link.append('Watch ', svg(ARROW));
-    link.lastChild.setAttribute('stroke-width', '2');
-
-    return el('article', { class: 'sermon-card reveal visible' }, [
-      thumb,
-      el('div', { class: 'sermon-card-body' }, [
-        el('p', { class: 'sermon-meta', text: `${MONTHS_LONG[m]} ${d}, ${y}  ·  ${v.category}` }),
-        el('h3', { text: v.title }),
-        v.description ? el('p', { text: v.description }) : el('p'),
-        link,
-      ]),
-    ]);
+  function thumbnail(id) {
+    const base = 'https://i.ytimg.com/vi/' + encodeURIComponent(id) + '/';
+    let i = 0;
+    const img = el('img', { class: 'sermon-tile-img', src: base + THUMBS[0], alt: '', decoding: 'async' });
+    const stepDown = () => { if (i < THUMBS.length - 1) img.src = base + THUMBS[++i]; };
+    img.addEventListener('error', stepDown);
+    img.addEventListener('load', () => { if (img.naturalWidth <= 120) stepDown(); });
+    return img;
   }
 
-  function sermonRow(v) {
-    const { y, m, d } = parts(v.date);
-    const btn = el('button', {
-      class: 'icon-btn', type: 'button', 'aria-expanded': 'false',
-      'aria-label': 'Watch ' + v.title,
-    }, [svg(VIDEO)]);
+  function sermonTile(v, featured) {
+    const btn = el('button', { class: 'sermon-tile-play', type: 'button',
+                               'aria-label': 'Play ' + v.title },
+                   [el('span', { class: 'sermon-tile-ring', 'aria-hidden': 'true' }, [playIcon()])]);
 
-    const row = el('article', { class: 'sermon-row reveal visible', 'data-category': v.category }, [
-      el('div', { class: 'sermon-row-date', 'aria-label': `${MONTHS_LONG[m]} ${d}, ${y}` }, [
-        el('span', { class: 'month', text: MONTHS[m] }),
-        el('span', { class: 'day', text: String(d) }),
-      ]),
-      el('div', { class: 'sermon-row-info' }, [
+    const tile = el('article', {
+      class: 'sermon-tile' + (featured ? ' sermon-tile--featured' : ''),
+      'data-category': v.category,
+    }, [
+      thumbnail(v.videoId),
+      el('span', { class: 'sermon-tile-shade', 'aria-hidden': 'true' }),
+      el('span', { class: 'sermon-chip', text: v.category }),
+      el('div', { class: 'sermon-tile-text' }, [
+        featured ? el('span', { class: 'sermon-tile-eyebrow', text: 'Latest message' }) : null,
         el('h3', { text: v.title }),
-        el('p', { class: 'meta' }, [
-          v.description ? el('span', { text: v.description }) : null,
-          el('span', { text: v.category }),
-          el('span', { text: String(y) }),
-        ]),
+        el('p', { class: 'sermon-tile-meta', text: formatDate(v.date) }),
+        featured && v.description ? el('p', { class: 'sermon-tile-desc', text: v.description }) : null,
       ]),
-      el('div', { class: 'sermon-row-actions' }, [btn]),
+      btn,
     ]);
 
     btn.addEventListener('click', () => {
-      const open = row.classList.contains('playing');
       closePlayers();
-      if (open) return;
-      row.classList.add('playing');
-      btn.setAttribute('aria-expanded', 'true');
-      row.appendChild(el('iframe', {
+      tile.classList.add('playing');
+      const frame = el('iframe', {
         class: 'sermon-embed',
         src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.videoId)}?autoplay=1&rel=0`,
         title: v.title,
         allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen',
         allowfullscreen: '',
-      }));
+      });
+      tile.appendChild(frame);
+      frame.focus();
     });
-    return row;
+    return tile;
   }
 
   /** Only one inline player at a time; removing the iframe stops playback. */
   function closePlayers() {
-    document.querySelectorAll('.sermon-row.playing').forEach(r => {
-      r.classList.remove('playing');
-      r.querySelector('.sermon-embed')?.remove();
-      r.querySelector('.icon-btn')?.setAttribute('aria-expanded', 'false');
+    document.querySelectorAll('.sermon-tile.playing').forEach(t => {
+      t.classList.remove('playing');
+      t.querySelector('.sermon-embed')?.remove();
     });
   }
 
@@ -188,30 +174,23 @@
     return p;
   }
 
-  function applyFilter(category) {
-    let shown = 0;
-    sermonsEl.querySelectorAll('.sermon-row').forEach(row => {
-      const match = category === 'All' || row.dataset.category === category;
-      row.hidden = !match;
-      if (match) shown++;
-      else if (row.classList.contains('playing')) closePlayers();
-    });
-    sermonsEl.querySelector('.sermons-status')?.remove();
-    if (!shown) sermonsEl.appendChild(sermonsStatus('No recent videos in this category.'));
+  function renderSermons(category) {
+    const mode  = sermonsEl.dataset.sermons;
+    const shown = allVideos
+      .filter(v => !category || category === 'All' || v.category === category)
+      .slice(0, SHOW[mode] || 6);
+
+    sermonsEl.replaceChildren(...shown.map((v, i) => sermonTile(v, mode === 'all' && i === 0)));
+    if (!shown.length) sermonsEl.appendChild(sermonsStatus('No recent videos in this category.'));
   }
 
   if (sermonsEl) {
-    const mode = sermonsEl.dataset.sermons;
-
     fetch('/api/sermons')
       .then(r => r.ok ? r.json() : Promise.reject(r.status))
       .then(({ videos }) => {
-        sermonsEl.replaceChildren();
         if (!videos || !videos.length) throw new Error('empty');
-        if (mode === 'recent') videos.slice(0, 3).forEach(v => sermonsEl.appendChild(sermonCard(v)));
-        else                   videos.forEach(v => sermonsEl.appendChild(sermonRow(v)));
-        const active = document.querySelector('.filter-btn.active');
-        if (active) applyFilter(active.dataset.filter);
+        allVideos = videos;
+        renderSermons(document.querySelector('.filter-btn.active')?.dataset.filter);
       })
       .catch(() => {
         sermonsEl.replaceChildren(sermonsStatus("We couldn't load recent sermons right now."));
@@ -225,7 +204,7 @@
       filterBtns.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
       btn.classList.add('active');
       btn.setAttribute('aria-pressed', 'true');
-      if (sermonsEl) applyFilter(btn.dataset.filter);
+      if (sermonsEl && allVideos.length) renderSermons(btn.dataset.filter);
     });
   });
 
