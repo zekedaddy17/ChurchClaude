@@ -388,7 +388,7 @@ section('Approve / deny lifecycle');
 
   const q = await (await hit('/api/admin/users', { cookie: ck })).json();
   check('queue lists both pending accounts', q.pending.length === 2, JSON.stringify(q.pending));
-  check('queue entries carry names from KV metadata (no extra get())',
+  check('queue entries carry names from KV metadata',
         q.pending.every(p => p.name));
 
   await hit('/api/admin/users/approve', { method: 'POST', cookie: ck, body: { email: 'alice@test.test' } });
@@ -404,6 +404,14 @@ section('Approve / deny lifecycle');
   const q2 = await (await hit('/api/admin/users', { cookie: ck })).json();
   check('queue reflects approve/deny', q2.pending.length === 1 && q2.pending[0].email === 'bob@test.test',
         JSON.stringify(q2.pending));
+
+  // KV list() lags behind writes: simulate index keys that outlived an approve
+  // and a deny, and check the queue still leaves both out.
+  await kv.put('pending:alice@test.test', '', { metadata: { name: 'Alice', email: 'alice@test.test' } });
+  await kv.put('pending:ghost@test.test', '', { metadata: { name: 'Ghost', email: 'ghost@test.test' } });
+  const q3 = await (await hit('/api/admin/users', { cookie: ck })).json();
+  check('stale index keys for approved/denied accounts are hidden',
+        q3.pending.length === 1 && q3.pending[0].email === 'bob@test.test', JSON.stringify(q3.pending));
 }
 
 section('Queue pagination (cursor loop)');
@@ -419,8 +427,10 @@ section('Queue pagination (cursor loop)');
 
   // Force multiple pages by shrinking the mock's page size below the key count.
   for (let i = 0; i < 25; i++) {
-    await kv.put(`pending:u${String(i).padStart(3, '0')}@t.test`, '', {
-      metadata: { name: 'U' + i, email: `u${String(i).padStart(3, '0')}@t.test`, createdAt: new Date(i * 1000).toISOString() },
+    const email = `u${String(i).padStart(3, '0')}@t.test`;
+    await kv.put(`user:${email}`, JSON.stringify({ email, name: 'U' + i, status: 'pending' }));
+    await kv.put(`pending:${email}`, '', {
+      metadata: { name: 'U' + i, email, createdAt: new Date(i * 1000).toISOString() },
     });
   }
   const origList = kv.list.bind(kv);

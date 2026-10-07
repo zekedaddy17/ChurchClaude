@@ -684,7 +684,16 @@ function buildAdminPage() {
   var pStatus = document.getElementById('pending-status');
   var pText   = document.getElementById('pending-status-text');
 
-  function pendingFail(msg) { pText.textContent = msg; pStatus.hidden = false; }
+  // Accounts approved or denied on this visit. The server can briefly still
+  // list them after the change, so they are kept off the page regardless.
+  var handled = {};
+
+  function pendingNote(msg, kind) {
+    pText.textContent = msg;
+    pStatus.className = 'auth-banner ' + (kind === 'ok' ? 'auth-success' : 'auth-error');
+    pStatus.hidden = false;
+  }
+  function pendingFail(msg) { pendingNote(msg, 'error'); }
 
   function loadPending() {
     fetch('/api/admin/users', { credentials: 'same-origin' })
@@ -693,7 +702,9 @@ function buildAdminPage() {
         if (!r.ok) throw new Error('http ' + r.status);
         return r.json();
       })
-      .then(function (d) { if (d) renderPending(d.pending || []); })
+      .then(function (d) {
+        if (d) renderPending((d.pending || []).filter(function (p) { return !handled[p.email]; }));
+      })
       .catch(function () { pendingFail('Could not load pending accounts.'); });
   }
 
@@ -728,15 +739,17 @@ function buildAdminPage() {
 
       var actions = document.createElement('div');
       actions.className = 'admin-row-actions';
-      actions.appendChild(actionBtn('Approve', 'btn btn-primary', item.email, 'approve', row));
-      actions.appendChild(actionBtn('Deny', 'btn btn-outline-dark', item.email, 'deny', row));
+      actions.appendChild(actionBtn('Approve', 'btn btn-primary', item, 'approve', row));
+      actions.appendChild(actionBtn('Deny', 'btn btn-outline-dark', item, 'deny', row));
       row.appendChild(actions);
 
       list.appendChild(row);
     });
   }
 
-  function actionBtn(label, cls, email, action, row) {
+  function actionBtn(label, cls, item, action, row) {
+    var email = item.email;
+    var who   = item.name ? item.name + ' (' + email + ')' : email;
     var b = document.createElement('button');
     b.type = 'button';
     b.className = cls;
@@ -751,7 +764,14 @@ function buildAdminPage() {
         body: JSON.stringify({ email: email }),
       })
         .then(function (r) { if (!r.ok) throw new Error('http ' + r.status); return r.json(); })
-        .then(function () { loadPending(); })
+        .then(function () {
+          handled[email] = true;
+          row.remove();
+          pendingNote(action === 'approve'
+            ? 'Approved ' + who + '. They can sign in now (allow up to a minute).'
+            : 'Denied ' + who + '. The account was deleted.', 'ok');
+          if (!list.querySelector('.admin-row')) renderPending([]);
+        })
         .catch(function () {
           pendingFail('Could not ' + action + ' ' + email + '. Please try again.');
           Array.prototype.forEach.call(row.querySelectorAll('button'), function (x) { x.disabled = false; });
@@ -1193,8 +1213,15 @@ async function handleAdminUsers(request, env) {
     cursor = page.list_complete ? null : page.cursor;
   } while (cursor);
 
-  pending.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
-  return jsonResp({ pending });
+  // list() can lag a minute behind an approve or deny, so check each account
+  // itself: one that is gone (denied) or no longer pending (approved) is done.
+  const records = await Promise.all(pending.map(p => env.MEMBERS_KV.get(`user:${p.email}`)));
+  const stillPending = pending.filter((p, i) => {
+    try { return JSON.parse(records[i]).status === 'pending'; } catch { return false; }
+  });
+
+  stillPending.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
+  return jsonResp({ pending: stillPending });
 }
 
 async function handleAdminUserAction(request, env, action) {
