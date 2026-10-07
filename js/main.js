@@ -141,28 +141,65 @@
       btn,
     ]);
 
-    btn.addEventListener('click', () => {
-      closePlayers();
-      tile.classList.add('playing');
-      const frame = el('iframe', {
-        class: 'sermon-embed',
-        src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(v.videoId)}?autoplay=1&rel=0`,
-        title: v.title,
-        allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen',
-        allowfullscreen: '',
-      });
-      tile.appendChild(frame);
-      frame.focus();
-    });
+    btn.addEventListener('click', () => openPlayer(v, btn));
     return tile;
   }
 
-  /** Only one inline player at a time; removing the iframe stops playback. */
-  function closePlayers() {
-    document.querySelectorAll('.sermon-tile.playing').forEach(t => {
-      t.classList.remove('playing');
-      t.querySelector('.sermon-embed')?.remove();
+  /**
+   * Clicking a tile opens it in a large player over the page, with a link out
+   * to YouTube. Closing removes the iframe, which stops playback.
+   */
+  let player, playerReturnFocus;
+
+  function buildPlayer() {
+    const closeBtn = el('button', { class: 'player-close', type: 'button', 'aria-label': 'Close video' });
+    closeBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+    const dlg = el('dialog', { class: 'player', 'aria-labelledby': 'player-title' }, [
+      el('div', { class: 'player-inner' }, [
+        closeBtn,
+        el('div', { class: 'player-frame' }),
+        el('div', { class: 'player-info' }, [
+          el('div', {}, [
+            el('p', { class: 'player-meta' }),
+            el('h3', { id: 'player-title' }),
+          ]),
+          el('a', { class: 'btn btn-primary player-yt', target: '_blank', rel: 'noopener',
+                    text: 'Open in YouTube' }),
+        ]),
+      ]),
+    ]);
+
+    closeBtn.addEventListener('click', () => dlg.close());
+    // A click on the dark backdrop lands on the <dialog> itself
+    dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', () => {
+      dlg.querySelector('.player-frame').replaceChildren();
+      document.documentElement.classList.remove('player-open');
+      playerReturnFocus?.focus();
     });
+    document.body.appendChild(dlg);
+    return dlg;
+  }
+
+  function openPlayer(v, returnFocus) {
+    player = player || buildPlayer();
+    playerReturnFocus = returnFocus;
+    const id = encodeURIComponent(v.videoId);
+
+    player.querySelector('#player-title').textContent = v.title;
+    player.querySelector('.player-meta').textContent = v.category + ' · ' + formatDate(v.date);
+    player.querySelector('.player-yt').href = 'https://www.youtube.com/watch?v=' + id;
+    player.querySelector('.player-frame').replaceChildren(el('iframe', {
+      src: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`,
+      title: v.title,
+      allow: 'autoplay; encrypted-media; picture-in-picture; fullscreen',
+      allowfullscreen: '',
+    }));
+
+    document.documentElement.classList.add('player-open');
+    player.showModal();
+    player.querySelector('.player-close').focus();
   }
 
   function sermonsStatus(text) {

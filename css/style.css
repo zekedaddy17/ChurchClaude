@@ -522,9 +522,6 @@ p:last-child { margin-bottom: 0; }
   transform: translateY(-3px);
 }
 
-.sermon-tile.playing,
-.sermon-tile.playing:hover { transform: none; }
-
 .sermon-tile-img {
   position: absolute;
   inset: 0;
@@ -642,17 +639,6 @@ p:last-child { margin-bottom: 0; }
   box-shadow: 0 8px 28px rgba(200, 169, 110, 0.45);
 }
 
-/* Inline player replaces the preview in place */
-.sermon-embed {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border: 0;
-  z-index: 2;
-  background: #000;
-}
-
 /* Loading placeholder */
 .sermon-tile.is-loading { box-shadow: none; background: var(--bg-alt); }
 .sermon-tile.is-loading::before {
@@ -673,6 +659,131 @@ p:last-child { margin-bottom: 0; }
   .sermon-tile, .sermon-tile-img, .sermon-tile-ring { transition: none; }
   .sermon-tile:hover .sermon-tile-img { transform: none; }
   .sermon-tile.is-loading::before { animation: none; }
+}
+
+/* ── Video player pop-up ──────────────────────────────────── */
+html.player-open { overflow: hidden; }
+
+.player {
+  width: min(1100px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100vh - 32px);
+  margin: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--primary-dark);
+  color: var(--white);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  overflow: visible;
+}
+
+.player::backdrop {
+  background: rgba(8, 18, 30, 0.82);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.player[open] { animation: player-in 0.25s cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+@keyframes player-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: none; }
+}
+
+.player-inner { position: relative; }
+
+.player-frame {
+  aspect-ratio: 16 / 9;
+  max-height: calc(100vh - 160px);
+  width: 100%;
+  margin: 0 auto;
+  background: #000;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  overflow: hidden;
+}
+
+.player-frame iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 20px 20px;
+}
+
+.player-info h3 {
+  color: var(--white);
+  font-size: 1.15rem;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.player-meta {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.player-yt { flex-shrink: 0; justify-content: center; }
+
+@media (min-width: 600px) {
+  .player-info {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 20px 28px 24px;
+  }
+  .player-info h3 { font-size: 1.35rem; }
+}
+
+.player-close {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  z-index: 1;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-dark);
+  background: var(--white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.player-close:hover { background: var(--accent); transform: scale(1.06); }
+.player-close:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.player-close svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+/* On phones the corner button would hang off-screen; tuck it inside */
+@media (max-width: 599px) {
+  .player-close { top: 8px; right: 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .player[open] { animation: none; }
 }
 
 .sermons-cta {
