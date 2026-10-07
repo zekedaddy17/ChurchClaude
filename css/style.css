@@ -777,9 +777,10 @@ html.player-open { overflow: hidden; }
   stroke-linecap: round;
 }
 
-/* On phones the corner button would hang off-screen; tuck it inside */
+/* On phones the corner button would hang off-screen; sit it just above the
+   player instead, clear of YouTube's own controls */
 @media (max-width: 599px) {
-  .player-close { top: 8px; right: 8px; }
+  .player-close { top: -52px; right: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
