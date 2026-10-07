@@ -72,7 +72,8 @@
             <h3>Watch Online Every Sunday</h3>
             <p>Join us live at 9:00 AM on Sunday mornings or catch the recording afterward.</p>
           </div>
-          <a href="https://www.youtube.com/@cpcofc/streams" target="_blank" rel="noopener" class="btn btn-primary" style="flex-shrink:0;">Watch on YouTube</a>
+          <!-- /live always points at the channel's current (or next scheduled) stream -->
+          <a href="https://www.youtube.com/@cpcofc/live" target="_blank" rel="noopener" class="btn btn-primary" style="flex-shrink:0;">Watch Live on YouTube</a>
         </div>
 
         <div class="section-header sermons-heading reveal">
@@ -92,8 +93,11 @@
         </div>
 
         <!-- Filled from /api/sermons (the @cpcofc YouTube feed) by js/main.js:
-             the 6 newest matching the filter -->
+             the 9 newest matching the filter -->
         <div class="sermons-grid" data-sermons="all" aria-labelledby="recent-heading" aria-live="polite">
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
+          <div class="sermon-tile is-loading" aria-hidden="true"></div>
           <div class="sermon-tile is-loading" aria-hidden="true"></div>
           <div class="sermon-tile is-loading" aria-hidden="true"></div>
           <div class="sermon-tile is-loading" aria-hidden="true"></div>

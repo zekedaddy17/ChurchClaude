@@ -73,12 +73,12 @@
   }
 
   /* ── Sermons (from /api/sermons, the church YouTube feed) ── */
-  // Home shows the 3 newest; /sermons shows the 6 newest that match the
+  // Home shows the 3 newest; /sermons shows the 9 newest that match the
   // active filter. The feed carries ~15, so a filter still has older videos
   // to draw on.
   const sermonsEl = document.querySelector('[data-sermons]');
   const CHANNEL_URL = 'https://www.youtube.com/@cpcofc/videos';
-  const SHOW = { recent: 3, all: 6 };
+  const SHOW = { recent: 3, all: 9 };
   const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   let allVideos = [];
 
@@ -176,7 +176,7 @@
     const mode  = sermonsEl.dataset.sermons;
     const shown = allVideos
       .filter(v => !category || category === 'All' || v.category === category)
-      .slice(0, SHOW[mode] || 6);
+      .slice(0, SHOW[mode] || 9);
 
     sermonsEl.replaceChildren(...shown.map(v => sermonTile(v)));
     if (!shown.length) sermonsEl.appendChild(sermonsStatus('No recent videos in this category.'));
