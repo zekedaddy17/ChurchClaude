@@ -80,13 +80,28 @@ under `[env.test]` in `wrangler.toml`. It has its **own KV namespace**, so
 uploading a throwaway directory or clicking Deny there cannot touch a real
 member's account.
 
-It lands at `https://cpcofc-test.<your-subdomain>.workers.dev`.
+It lives at **https://cpcofc-test.zekenburton.workers.dev**.
+
+Use it to try every change before it reaches the live site: deploy a branch to
+staging, check it there, and only then merge to `main` (which deploys
+production).
 
 ### First-time setup
+
+Already done — the staging namespace exists and its id is in `wrangler.toml`.
+These steps are kept for reference in case staging ever has to be rebuilt.
 
 ```
 npx wrangler login
 npx wrangler kv namespace create MEMBERS_KV_TEST
+```
+
+On a headless machine where `wrangler login` can't open a browser, create an
+API token instead (Cloudflare dashboard → API Tokens, "Edit Cloudflare Workers"
+template) and keep it in a file outside the repo, loaded before each command:
+
+```
+set -a; . ~/.config/cpcofc/cloudflare.env; set +a   # CLOUDFLARE_API_TOKEN=…, CLOUDFLARE_ACCOUNT_ID=…
 ```
 
 Put the printed id into `[[env.test.kv_namespaces]]` in `wrangler.toml`,

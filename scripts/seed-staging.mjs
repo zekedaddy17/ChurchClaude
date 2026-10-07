@@ -110,7 +110,8 @@ export async function buildEntries() {
   // queue reads (it lists from metadata alone, with no per-user lookup).
   for (const [email, name] of [['hopeful@example.com', 'Daniel Ortiz'],
                                ['newcomer@example.com', 'Priscilla Vance']]) {
-    entries.push({ key: `pending:${email}`, value: '',
+    // The value is never read, but `wrangler kv key put` rejects an empty one.
+    entries.push({ key: `pending:${email}`, value: '1',
                    metadata: JSON.stringify({ name, email, createdAt: now }) });
   }
   return entries;
